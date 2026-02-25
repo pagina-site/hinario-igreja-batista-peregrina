@@ -31,6 +31,8 @@ body{
   font-family:'Crimson Text',serif;
   font-size:var(--font);
 }
+
+/* HEADER PRINCIPAL */
 header{
   padding:1.2rem 1.5rem;
   border-bottom:3px solid var(--primary);
@@ -47,19 +49,21 @@ header{
   gap:.8rem;
 }
 header img{
-  width:60px;
-  height:60px;
-  border-radius:50%;
+  width:68px;
+  height:68px;
   flex-shrink:0;
+  object-fit:contain;
 }
 h1{
   font-family:'Nunito',sans-serif;
-  font-size:1.4rem;
+  font-size:1.25rem;
   font-weight:700;
-  text-align:center;
-  line-height:1.3;
+  line-height:1.35;
 }
-.church-name{white-space:nowrap}
+h1 .title-line2{
+  white-space:nowrap;
+  display:block;
+}
 .controls{
   display:flex;
   gap:1rem;
@@ -72,6 +76,7 @@ h1{
   font-size:1.3rem;
   cursor:pointer;
 }
+
 .search{padding:1rem 1.5rem}
 .search input{
   width:100%;
@@ -79,7 +84,9 @@ h1{
   border-radius:10px;
   border:none;
 }
+
 .container{max-width:900px;margin:1.5rem auto;padding:0 1rem}
+
 .playlist-launch{
   display:flex;
   justify-content:flex-end;
@@ -93,6 +100,7 @@ h1{
   border-radius:8px;
   font-weight:bold;
 }
+
 .card{
   background:var(--card);
   padding:1rem;
@@ -109,6 +117,8 @@ h1{
   font-weight:bold;
   margin-right:.5rem;
 }
+
+/* OVERLAY DO HINO */
 .overlay{
   display:none;
   position:fixed;
@@ -118,6 +128,7 @@ h1{
   z-index:10;
 }
 .overlay.active{display:block}
+
 .detail{
   background:var(--card);
   max-width:900px;
@@ -125,12 +136,35 @@ h1{
   padding:2rem;
   border-radius:15px;
 }
+
+.detail-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1rem;
+}
+.detail-header .back{
+  color:var(--accent);
+  font-weight:bold;
+  cursor:pointer;
+}
+.detail-controls button{
+  background:none;
+  border:none;
+  color:var(--accent);
+  font-size:1.2rem;
+  margin-left:.5rem;
+  cursor:pointer;
+}
+
 .lyrics{
   white-space:pre-wrap;
   line-height:1.8;
   margin:1.5rem 0;
 }
+
 audio{width:100%;margin-top:1rem}
+
 .download-btn{
   display:block;
   margin:1.2rem 0;
@@ -146,8 +180,11 @@ audio{width:100%;margin-top:1rem}
 <header>
   <div class="header-wrapper">
     <div class="header-top">
-      <img src="https://i.imgur.com/tXbDnDS.jpeg">
-      <h1>Hinário<br><span class="church-name">Igreja Batista Peregrina</span></h1>
+      <img src="https://i.imgur.com/tXbDnDS.jpeg" alt="Logo Igreja Batista Peregrina">
+      <h1>
+        Hinário
+        <span class="title-line2">Igreja Batista Peregrina</span>
+      </h1>
     </div>
     <div class="controls">
       <button onclick="toggleTheme()">🌙</button>
@@ -170,20 +207,49 @@ audio{width:100%;margin-top:1rem}
 
 <div class="overlay" id="playlistOverlay">
   <div class="detail">
-    <button onclick="closePlaylist()">← Voltar</button>
-    <div id="plNowPlaying"></div>
-    <audio id="plPlayer" controls></audio>
-    <button onclick="plPrev()">⏮</button>
-    <button onclick="plPlay()">▶</button>
-    <button onclick="plStop()">⏹</button>
-    <button onclick="plNext()">⏭</button>
+    <div class="detail-header">
+      <span class="back" onclick="closePlaylist()">← Voltar ao índice</span>
+      <div class="detail-controls">
+        <button onclick="font(-1)">A-</button>
+        <button onclick="font(1)">A+</button>
+      </div>
+    </div>
+    <h2>▶ Playlist</h2>
+    <div style="margin:1rem 0;display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;max-width:360px">
+      <button onclick="plPrev()" style="background:var(--card);border:2px solid var(--primary);color:var(--accent);padding:.5rem;border-radius:8px;font-size:1.2rem;cursor:pointer">⏮</button>
+      <button onclick="plPlay()" id="plPlayBtn" style="background:var(--primary);border:none;color:#000;padding:.5rem;border-radius:8px;font-size:1.2rem;font-weight:bold;cursor:pointer">▶</button>
+      <button onclick="plStop()" style="background:var(--card);border:2px solid var(--primary);color:var(--accent);padding:.5rem;border-radius:8px;font-size:1.2rem;cursor:pointer">⏹</button>
+      <button onclick="plNext()" style="background:var(--card);border:2px solid var(--primary);color:var(--accent);padding:.5rem;border-radius:8px;font-size:1.2rem;cursor:pointer">⏭</button>
+    </div>
+    <div id="plNowPlaying" style="margin-bottom:1.2rem;font-weight:bold;font-size:1.1rem;line-height:1.5"></div>
+    <audio id="plPlayer" controls style="width:100%;margin-bottom:.5rem"></audio>
+    <span class="back" style="display:block;margin-top:1.5rem;color:var(--accent);font-weight:bold;cursor:pointer" onclick="closePlaylist()">← Voltar ao índice</span>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="detail">
+    <div class="detail-header">
+      <span class="back" onclick="closeDetail()">← Voltar ao índice</span>
+      <div class="detail-controls">
+        <button onclick="font(-1)">A-</button>
+        <button onclick="font(1)">A+</button>
+      </div>
+    </div>
+    <h2><span id="dnum"></span> – <span id="dtitle"></span></h2>
+    <div class="lyrics" id="dlyrics"></div>
+    <audio id="player" controls style="display:none"></audio>
+    <span class="back" style="display:block;margin-top:1.5rem;color:var(--accent);font-weight:bold;cursor:pointer" onclick="closeDetail()">← Voltar ao índice</span>
+    <a id="downloadLink" class="download-btn" download style="display:none">⬇️ Baixar áudio</a>
   </div>
 </div>
 
 <script>
-const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQTfKcFZ1dugm9AaT7JhbfXgQGs6x_O328hXdwsG4yYdyjW7sOq0Ctmeqa-m-niFNIqiwvijlDohd6R/pub?output=csv";
+// ⚠️ SUBSTITUA pela URL CSV da planilha da Igreja Batista Peregrina
+const CSV_URL="https://docs.google.com/spreadsheets/d/1cpM35yuOPWiajtElLIF_pQmDjUQMQ4Ap_KppYY5MTTs/export?format=csv&gid=0";
 
 let hymns=[],size=16;
+
 function font(d){
   size=Math.min(26,Math.max(12,size+d));
   document.documentElement.style.setProperty('--font',size+'px');
@@ -198,17 +264,12 @@ function parseCSV(t){
     else if(c==','&&!q){row.push(f);f=''}
     else if((c=='\n'||c=='\r')&&!q){
       if(f||row.length){row.push(f);r.push(row)}
-      row=[];f='';
+      row=[];f='';if(c=='\r'&&n=='\n')i++
     } else f+=c;
   }
   if(f||row.length){row.push(f);r.push(row)}
   return r.slice(1).map(x=>({num:x[0],title:x[1],lyrics:x[2],audio:x[3]}));
 }
-
-fetch(CSV_URL).then(r=>r.text()).then(t=>{
-  hymns=parseCSV(t);
-  render(hymns);
-});
 
 function render(l){
   list.innerHTML='';
@@ -216,33 +277,102 @@ function render(l){
     const d=document.createElement('div');
     d.className='card';
     d.innerHTML='<span class="num">'+h.num+'</span>'+h.title;
+    d.onclick=()=>open(h);
     list.appendChild(d);
   });
 }
 
-/* PLAYLIST */
-let plIndex=0,plAudio=document.getElementById('plPlayer'),plList=[];
+function open(h){
+  dnum.textContent=h.num;
+  dtitle.textContent=h.title;
+  dlyrics.textContent=h.lyrics||'';
+  if(h.audio){
+    player.src=h.audio;
+    player.style.display='block';
+    downloadLink.href=h.audio;
+    downloadLink.style.display='block';
+  } else {
+    player.style.display='none';
+    downloadLink.style.display='none';
+  }
+  overlay.classList.add('active');
+}
+function closeDetail(){
+  player.pause();player.src='';
+  overlay.classList.remove('active');
+}
+
+fetch(CSV_URL).then(r=>r.text()).then(t=>{
+  hymns=parseCSV(t);
+  render(hymns);
+});
+
+// PLAYLIST
+let plIndex=0,plAudio=document.getElementById('plPlayer');
 
 function openPlaylist(){
-  plList=hymns.filter(h=>h.audio);
-  if(!plList.length) return;
+  const withAudio=hymns.filter(h=>h.audio);
   plIndex=0;
-  plLoad();
+  plLoadTrack(withAudio);
   document.getElementById('playlistOverlay').classList.add('active');
+  plAudio.onended=()=>{plNext();};
+  plAudio._withAudio=withAudio;
 }
+
+function plLoadTrack(list){
+  const h=list[plIndex];
+  plAudio.src=h.audio;
+  document.getElementById('plNowPlaying').innerHTML='♪ Tocando agora:<br>'+h.num+' – '+h.title;
+}
+
+function plLoadAndPlay(list){
+  plLoadTrack(list);
+  plAudio.play();
+  document.getElementById('plPlayBtn').textContent='⏸';
+}
+
+function plPlay(){
+  const list=plAudio._withAudio;
+  if(!list) return;
+  if(plAudio.paused){
+    plAudio.play();
+    document.getElementById('plPlayBtn').textContent='▶';
+  } else {
+    plAudio.pause();
+    document.getElementById('plPlayBtn').textContent='⏸';
+  }
+}
+
+function plStop(){
+  plAudio.pause();
+  plAudio.currentTime=0;
+  document.getElementById('plPlayBtn').textContent='▶';
+}
+
+function plNext(){
+  const list=plAudio._withAudio;
+  if(!list) return;
+  plIndex=(plIndex+1)%list.length;
+  plLoadAndPlay(list);
+}
+
+function plPrev(){
+  const list=plAudio._withAudio;
+  if(!list) return;
+  plIndex=(plIndex-1+list.length)%list.length;
+  plLoadAndPlay(list);
+}
+
 function closePlaylist(){
   plAudio.pause();plAudio.src='';
+  document.getElementById('plPlayBtn').textContent='▶ Play';
   document.getElementById('playlistOverlay').classList.remove('active');
 }
-function plLoad(){
-  const h=plList[plIndex];
-  plAudio.src=h.audio;
-  document.getElementById('plNowPlaying').innerText=h.num+' – '+h.title;
-}
-function plPlay(){plAudio.play()}
-function plStop(){plAudio.pause();plAudio.currentTime=0}
-function plNext(){plIndex=(plIndex+1)%plList.length;plLoad();plPlay()}
-function plPrev(){plIndex=(plIndex-1+plList.length)%plList.length;plLoad();plPlay()}
+
+search.oninput=e=>{
+  const v=e.target.value.toLowerCase();
+  render(hymns.filter(h=>h.num.includes(v)||h.title.toLowerCase().includes(v)));
+};
 </script>
 
 </body>
